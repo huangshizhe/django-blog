@@ -1,0 +1,15 @@
+{% extends "BLOG/base.html" %}
+{% load bootstrap3 %}
+{% block header %}
+  <h2>编辑博客</h2>
+{% endblock header %}
+{% block content %}
+  <form action="{% url 'BLOG:edit_blog' blog.id%}" method='post' class="form">
+    {% csrf_token %}
+    {% bootstrap_form titleform %}
+    {% buttons %}
+    <button name='submit' class="btn btn-primary"> 保存修改 </button>
+    {% endbuttons %}
+  </form>
+  
+{% endblock content %}

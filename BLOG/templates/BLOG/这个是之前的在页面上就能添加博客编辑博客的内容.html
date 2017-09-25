@@ -1,0 +1,15 @@
+添加新的博客
+  {%if user.is_authenticated%}
+  {# 将文字标签做成了按钮 #}
+    <a href="{% url 'BLOG:add_blog' %}"><input type="button" value="添加新的博客" ></a>
+{#     <a href="{% url 'BLOG:add_blog' %}">添加新的博客</a> #}
+{#     <button onclick="window.open('http://www.w3school.com.cn/tags/att_button_disabled.asp')">我是按钮</button> #}
+  {%endif%}
+
+
+
+编辑博客部分          <small>
+            {%if user.is_authenticated%}
+              <a href="{% url 'BLOG:edit_blog' blog.id %}" >------编辑</a>
+            {%endif%}
+          </small>

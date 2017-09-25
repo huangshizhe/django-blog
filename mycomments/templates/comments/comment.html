@@ -1,0 +1,28 @@
+{% load staticfiles %}
+{# 这就是preview出来的那条评论的显示，如果没有这个的话preview就不能显示出来了 #}
+{# 在views.py文件搜索就能看出来这个是里面的preview #}
+<div class="media {% if preview %} comment-preview {% endif %}">
+    <a class="pull-left" href="#">
+        {% if comment.user and comment.user.profile.avatar %}
+            {# <img class="media-object" src="{{ comment.user.profile.avatar.url }}-64x64" alt=""> #}
+        {% else %}
+            <img class="media-object" src="/static/BLOG/images/touxiang.png" alt="">
+        {% endif %}
+    </a>
+    <div class="media-body"
+            {% if not preview %} id="c{{ comment.id }}" {% endif %}>
+        {# c## is used by the absolute URL of the Comment model, so keep that as it is. #}
+        <h4 class="media-heading">{{ comment.user_name }}
+            <small>
+                {{ comment.submit_date }}
+                {% if not preview %}
+                | <a href="#c{{ comment.id }}" data-comment-id="{{ comment.id }}" class="comment_reply_link">Reply</a>
+                {% endif %}
+            </small>
+        </h4>
+        {{ comment.comment|linebreaks }}
+        {% if not preview %}
+        <div class="wrap-comment-preview"></div>
+        {% endif %}
+    </div>
+</div>

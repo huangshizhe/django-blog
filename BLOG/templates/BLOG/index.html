@@ -1,0 +1,213 @@
+{% load staticfiles %}
+{% load blog_tags %}
+{% load threadedcomments_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+        form {font-family:微软雅黑;font-size:large;}
+    </style>
+    <title>Journey</title>
+    <!-- meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- css -->
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="{% static 'BLOG/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'BLOG/css/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'BLOG/css/pace.css' %}">
+    <link rel="stylesheet" href="{% static 'mycomments/css/mycomments.css' %}">
+    <link rel="stylesheet" href="{% static 'BLOG/css/highlights/github.css' %}">
+
+    <!-- js -->
+    <script src="{% static 'BLOG/js/jquery-2.1.3.min.js' %}"></script>
+    <script src="{% static 'BLOG/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'BLOG/js/pace.min.js' %}"></script>
+    <script src="{% static 'BLOG/js/modernizr.custom.js' %}"></script>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+    <script src="{% static 'mycomments/js/js.cookie.js' %}"></script>
+    <script src="{% static 'mycomments/js/mycomments.js' %}"></script>.
+</head>
+
+<body>
+<div class="container">
+    <header id="site-header">
+        <div class="row">
+            <div class="col-md-4 col-sm-5 col-xs-8">
+                <div class="logo">
+                    <h1><a href="{% url 'BLOG:index' %}">Journey</a></h1>
+                </div>
+            </div><!-- col-md-4 -->
+            <div class="col-md-8 col-sm-7 col-xs-4">
+                <nav class="main-nav" role="navigation">
+                    <div class="navbar-header">
+                        <button type="button" id="trigger-overlay" class="navbar-toggle">
+                            <span class="ion-navicon"></span>
+                        </button>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="navbar" >
+                        <ul class="nav navbar-nav navbar-right">
+                            {%if user.is_authenticated%}
+                              <li class="cl-effect-11"><a> 欢迎！{{user.username}}.</a></li>
+                              <li class="cl-effect-11" ><a href="{%url 'user:logout' %}" data-hover="注销">注销</a></li>
+                              {# <li class="cl-effect-11" ><a href="{% url 'admin:admin' %}" data-hover="管理" > 管理</a></li> #}
+                            {%else%}
+                              <li class="cl-effect-11"><a href="{%url 'user:login' %}" data-hover="登录">登录</a></li>
+{#                               <li class="cl-effect-11"><a href="{%url 'user:register' %}" data-hover="注册">注册</a></li> #}
+                            {%endif%}
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </nav>
+                <div id="header-search-box">
+                    <a id="search-menu" href="#"><span id="search-icon" class="ion-ios-search-strong"></span></a>
+                    <div id="search-form" class="search-form">
+                        <form role="search" method="get" id="searchform" action="{% url 'haystack_search' %}">
+                            <input type="search" name="q" placeholder="搜索" required>
+                            <button type="submit"><span class="ion-ios-search-strong"></span></button>
+                        </form>
+                    </div>
+                </div>
+            </div><!-- col-md-8 -->
+        </div>
+    </header>
+</div>
+<div class="content-body">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-8">
+                {%for blog in blogs %}
+                    <div class="post post-{{ blog.slug }}">
+                        <h2>{{blog.title}}</h2>
+                        <p class="lead">由{{blog.owner}}</p>  
+                        {% get_comment_count for blog as comment_count %}
+                        <p><i class="fa fa-clock-o fa-fw"></i>发布于{{ blog.date_added }} 阅读:  {{blog.views}}，评论数： {{ comment_count }} </p>
+                        <div class="widget widget-tag-cloud">
+                            <ul>
+                                {% for tag in blog.tags.all %}
+                                <li><a href="{% url 'BLOG:tag' tag.pk %}">{{tag.name}}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <hr>
+                        <div class="entry-content clearfix">
+                            <p>{{ blog.excerpt }}...</p>
+                        </div>
+                        <a class="btn btn-primary" href="{% url 'BLOG:readmore' blog.slug %}">阅读更多</a>
+                        <hr>
+                    </div>
+                {% empty %}
+                    <p>暂时还没有新的帖子</p>
+                {%endfor%}
+
+                <!--页码部分-->
+                {% if is_paginated %}
+                <div class="pagination">
+                    {% if first %}
+                        <a href="?page=1">1</a>
+                    {% endif %}
+                    {% if left %}
+                        {% if left_has_more %}
+                            <span>...</span>
+                        {% endif %}
+                        {% for i in left %}
+                            <a href="?page={{i}}">{{i}}</a>
+                        {% endfor %}
+                    {% endif %}
+                    <a href="?page={{page_obj.number}}" style="color: red">{{page_obj.number}}</a>
+                    {% if right %}
+                        {% for i in right %}
+                            <a href="?page={{i}}">{{i}}</a>
+                        {% endfor %}
+                        {% if right_has_more %}
+                            <span>...</span>
+                        {% endif %}
+                    {% endif %}
+                    {% if last %}
+                        <a href="?page={{ paginator.num_pages }}">{{paginator.num_pages}}</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </main><!--end-col-md-8-->
+
+            <aside class="col-md-4">
+                <div class="widget widget-recent-posts">
+                    <h3 class="widget-title">最新文章</h3>
+                    {% get_recent_posts as recent_post_list %}
+                    <ul>
+                        {% for blog in recent_post_list %}
+                        <li class="cl-effect-11">
+                            <a href="{{ blog.get_absolute_url }}" data-hover="{{blog.title}}">{{blog.title}}</a>
+                        </li>
+                        {%endfor%}  
+                    </ul>
+                </div>
+                <div class="widget widget-archives">
+                    <h3 class="widget-title">归档</h3>
+                    <ul>
+                        {% archives as date_list %}
+                        {% for date in date_list %}
+                        <li class="cl-effect-11" >
+                            <a href="{% url 'BLOG:archives' date.year date.month %}" data-hover="{{date.year}}年{{date.month}}月">{{date.year}}年{{date.month}}月</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="widget widget-category">
+                    <h3 class="widget-title">分类</h3>
+                    <ul>
+                        {% get_category as category_list %}
+                        {% for category in category_list %}
+                        <li class="cl-effect-11">
+                            <a href="{% url 'BLOG:category' category.pk %}" data-hover="{{category.name}}">{{category.name}}<span class="post-count">({{category.num_post}})</span></a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="widget widget-tag-cloud">
+                    <h3 class="widget-title">标签云</h3>
+                    <ul>
+                    {% get_tags as tag_list %}
+                    {% for tag in tag_list %}
+                        <li><a href="{% url 'BLOG:tag' tag.pk %}">{{ tag.name }}</a></li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                <div class="rss">
+                    <a href=""><span class="ion-social-rss-outline"></span> RSS 订阅</a>
+                </div>
+            </aside><!--end col-md-4-->
+        </div>
+    </div>
+</div>
+<footer id="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Mobile Menu -->
+<div class="overlay overlay-hugeinc">
+    <button type="button" class="overlay-close"><span class="ion-ios-close-empty"></span></button>
+    <nav>
+        <ul>
+            {%if user.is_authenticated%}
+              <li><a href="{%url 'user:logout' %}">注销</a></li>
+            {%else%}
+              <li><a href="{%url 'user:login' %}">登录</a></li>
+              <li><a href="{%url 'user:register' %}">注册</a></li>
+            {%endif%}
+        </ul>
+    </nav>
+</div>
+<script src="{% static 'BLOG/js/script.js'%}"></script>
+
+
+</body>
+</html>

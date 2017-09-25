@@ -1,0 +1,58 @@
+{% extends 'BLOG/base.html' %}
+{% load highlight %}
+{% load threadedcomments_tags %}
+
+{% block content %}
+    <div class="row">
+    <main class="col-md-8">
+    {% if query %}
+    <!--query 变量的值即为用户搜索的关键词-->
+        {% for result in page.object_list %}
+            <article class="post post-{{ result.object.pk }}">
+                <header class="entry-header">
+                    <h1 class="entry-title">
+                        <a href="{{ result.object.get_absolute_url }}">{% highlight result.object.title with query %}</a><!--这里要这么理解
+                        高亮返回的查询结果的query，即是我们搜索的关键字，高亮。英文可以写成highlight query in result.object.title(text),这里的result已经确定包含了我们要查询的内容了，只是我们再去让他里面的关键词高亮-->
+                    </h1>
+                    <div class="entry-meta">
+                    <span class="post-category">
+                        <a href="{% url 'BLOG:category' result.object.category.pk %}">
+                            {{ result.object.category.name }}</a></span>
+                        <span class="post-date"><a href="#">
+                            <time class="entry-date" datetime="{{ result.object.data_added }}">
+                                {{ result.object.date_added }}</time></a></span>
+                        <span class="post-author"><a href="#">{{ result.object.owner }}</a></span>
+                        <span class="comments-link">
+                        {% get_comment_count for result.object as comment_count %}
+                        <a href="{{ result.object.get_absolute_url }}">
+                            {{ comment_count }} 评论</a></span>
+                        <span class="views-count">
+                        <a href="{{ result.object.get_absolute_url }}">{{ result.object.views }} 阅读</a></span>
+                    </div>
+                </header>
+                <div class="entry-content clearfix">
+                    <p>{% highlight result.object.text with query %}</p>
+                    <div class="read-more cl-effect-14">
+                        <a href="{{ result.object.get_absolute_url }}" class="more-link">继续阅读 <span
+                                class="meta-nav">→</span></a>
+                    </div>
+                </div>
+            </article>
+        {% empty %}
+            <div class="no-post">没有搜索到你想要的结果！</div>
+        {% endfor %}
+        {% if page.has_previous or page.has_next %}
+            <div>
+                {% if page.has_previous %}
+                    <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous
+                {% if page.has_previous %}</a>{% endif %}
+                |
+                {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next
+                &raquo;{% if page.has_next %}</a>{% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        请输入搜索关键词，例如 django
+    {% endif %}
+    </main>
+{% endblock content %}
