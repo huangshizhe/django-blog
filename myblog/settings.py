@@ -147,7 +147,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 #为了让nginx方便处理静态文件，把静态文件都收集到这个目录下
 #即项目根目录（BASE_DIR）下的 static 文件夹。
-# STATIC_ROOT = os.path.join(BASE_DIR,'static')
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
 #我的设置
 LOGIN_URL = '/user/login/'
