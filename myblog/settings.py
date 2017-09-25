@@ -24,7 +24,7 @@ SECRET_KEY = '=!4@=heri2e4$yn^53+mpyud7$gmdvxp8nnpz5q6#x^or3x^6-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['127.0.0.1','localhost','.huangshizhe.xyz']#这里不加点的话就只允许访问huangshizhe.xyz
+ALLOWED_HOSTS = ['127.0.0.1','localhost','.huangshizhe.xyz','39.108.172.63']#这里不加点的话就只允许访问huangshizhe.xyz
 
 
 # Application definition
