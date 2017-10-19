@@ -3,7 +3,6 @@
 
 
 
-
 {% block content %}
     <div class="row">
       <main class="col-md-8">  
@@ -14,7 +13,7 @@
           阅读:  {{blog.views}}，评论数： {{ comment_count }} </p>
         <hr>
         <div class="entry-content clearfix">
-            <p>{{blog.text|safe}}</p>
+            <p>{{blog.text|safe|linebreaks}}</p>
         </div>
         <hr>
         <script>
