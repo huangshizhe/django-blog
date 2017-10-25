@@ -183,6 +183,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
+MEDIA_ROOT = os.path.join(BASE_DIR,'media').replace('\\','/')
+MEDIA_URL = '/media/'
+
 
 STATIC_URL = '/static/'
 #为了让nginx方便处理静态文件，把静态文件都收集到这个目录下
