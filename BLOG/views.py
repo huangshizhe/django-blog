@@ -146,6 +146,7 @@ def edit_blog(request,blog_id):
     else:
         titleform=EditBlogForm(instance=blog,data=request.POST)
         if titleform.is_valid():
+            titleform.save()
             return HttpResponseRedirect(reverse('BLOG:index'))
     context={'titleform':titleform,'blog':blog}
     return render(request,'BLOG/edit_blog.html',context)
