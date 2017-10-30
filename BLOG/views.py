@@ -128,9 +128,9 @@ def add_blog(request):
     else:
         titleform=NewBlogForm(data=request.POST)
         if titleform.is_valid():
-            newblog=titleform.save(commit=False)
+            newblog=titleform.save(commit=False)#如果没有这一参数，那么也是直接生成新的模型实例，并且保存到数据库中
             newblog.owner=request.user
-            newblog.save()
+            newblog.save()#这个save方法是模型实例的save方法，保存到数据库中
             return HttpResponseRedirect(reverse('BLOG:index'))
     context={'titleform':titleform}
     return render(request,'BLOG/add_blog.html',context)

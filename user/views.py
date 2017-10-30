@@ -1,4 +1,4 @@
-from django.shortcuts import render 
+from django.shortcuts import render,redirect
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth import login,logout,authenticate
@@ -7,7 +7,8 @@ from django.contrib.auth.forms import UserCreationForm
 # Create your views here.
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse('BLOG:index'))
+    redirect_to = request.GET.get('next','')
+    return redirect(redirect_to)
 
 def register(request):
     '''注册新用户'''

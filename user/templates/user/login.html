@@ -12,6 +12,6 @@
       <button name='submit' class="btn btn-primary">登录</button>
     {% endbuttons %}
 {#     <input type="button" value="注册" onclick="window.location.href={% url 'user:register' %}" #}
-    <input type="hidden" name="next" value="{% url 'BLOG:index'%}"/>
+    <input type="hidden" name="next" value="{{ next }}"/>
   </form>
 {%endblock content%}
