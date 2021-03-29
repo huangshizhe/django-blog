@@ -12,7 +12,7 @@ django-threadedcomments==1.1
 idna==2.6
 jieba==0.38
 Markdown==2.6.9
-Pygments==2.2.0
+Pygments==2.7.4
 python-akismet==0.3.0
 pytz==2017.2
 requests==2.18.4
